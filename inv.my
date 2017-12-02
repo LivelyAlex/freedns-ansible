@@ -1,0 +1,1 @@
+myservername ansible_ssh_host=myip ansible_ssh_user=root

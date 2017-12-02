@@ -1,0 +1,22 @@
+- hosts: all
+  tasks:
+    - name: Installs inadyn
+      apt: pkg=inadyn state=installed update_cache=true
+
+    - name: Push config
+      copy: src=files/inadyn.conf dest=/etc/inadyn.conf mode=0640
+
+    - name: Enabling
+      lineinfile: dest=/etc/default/inadyn regexp='^RUN_DAEMON=' line='RUN_DAEMON="yes"'
+      notify:
+        - restart inadyn
+
+    - name: Autorun
+      command: systemctl enable inadyn.service
+
+    - name: Start
+      service: name=inadyn state=restarted
+
+  handlers:
+    - name: restart inadyn
+      service: name=inadyn state=restarted
